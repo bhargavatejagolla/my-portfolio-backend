@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ChevronDown, Mail } from 'lucide-react';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
+import { SiCodechef } from 'react-icons/si';
 import Shuffle from './Shuffle';
 import { TypeAnimation } from 'react-type-animation';
 import ElectricBorder from './ElectricBorder';
@@ -109,6 +110,7 @@ export default function Hero() {
           <div className="flex flex-wrap gap-4 lg:gap-6 text-gray-400">
             <a href="https://github.com/bhargavatejagolla" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors p-3 glass-panel rounded-full flex items-center justify-center"><FaGithub size={24} /></a>
             <a href="https://linkedin.com/in/golla-bhargava-teja" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors p-3 glass-panel rounded-full flex items-center justify-center"><FaLinkedin size={24} /></a>
+            <a href="https://www.codechef.com/users/bhargavatejago" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors p-3 glass-panel rounded-full flex items-center justify-center"><SiCodechef size={24} /></a>
             <a href="mailto:bhargavatejagolla@gmail.com" className="hover:text-primary transition-colors p-3 glass-panel rounded-full flex items-center justify-center"><Mail size={24} /></a>
           </div>
         </div>

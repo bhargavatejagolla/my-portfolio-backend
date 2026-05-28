@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { Mail, MapPin, Phone, Send } from 'lucide-react';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
+import { SiCodechef } from 'react-icons/si';
 import ElectricBorder from './ElectricBorder';
 import TextPressure from './TextPressure';
 import FallingText from './FallingText';
@@ -133,6 +134,9 @@ export default function Contact() {
             </a>
             <a href="https://linkedin.com/in/golla-bhargava-teja" target="_blank" rel="noreferrer" className="p-4 glass-panel hover:bg-secondary/20 hover:text-secondary transition-all hover:-translate-y-1 border border-white/5 hover:border-secondary/50">
               <FaLinkedin size={24} />
+            </a>
+            <a href="https://www.codechef.com/users/bhargavatejago" target="_blank" rel="noreferrer" className="p-4 glass-panel hover:bg-[#8B5CF6]/20 hover:text-[#8B5CF6] transition-all hover:-translate-y-1 border border-white/5 hover:border-[#8B5CF6]/50">
+              <SiCodechef size={24} />
             </a>
           </div>
         </div>
