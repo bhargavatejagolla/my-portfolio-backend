@@ -1,0 +1,33 @@
+.falling-text-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  text-align: center;
+}
+
+.falling-text-target {
+  display: inline-block;
+}
+
+.word {
+  display: inline-block;
+  margin: 0 4px;
+  user-select: none;
+  font-weight: 800;
+  color: white;
+}
+
+.highlighted {
+  color: #61dca3; /* Uses the primary color from the theme */
+  font-weight: 900;
+  text-shadow: 0 0 15px rgba(97,220,163,0.4);
+}
+
+.falling-text-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}

@@ -1,0 +1,14 @@
+.text-block {
+  margin: 0;
+  max-width: 100%;
+  color: #fff;
+}
+
+.text-block p {
+  margin: 0;
+}
+
+.char {
+  will-change: transform;
+  display: inline-block;
+}
