@@ -15,6 +15,7 @@ const ElectricBorder = ({
   const animationRef = useRef(null);
   const timeRef = useRef(0);
   const lastFrameTimeRef = useRef(0);
+  const inViewRef = useRef(true);
 
   // Noise functions
   const random = useCallback(x => {
@@ -174,6 +175,11 @@ const ElectricBorder = ({
     let lastDpr = Math.min(window.devicePixelRatio || 1, 2);
 
     const drawElectricBorder = currentTime => {
+      if (!inViewRef.current) {
+        animationRef.current = requestAnimationFrame(drawElectricBorder);
+        return;
+      }
+
       if (!canvas || !ctx) return;
 
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -263,6 +269,15 @@ const ElectricBorder = ({
     });
     resizeObserver.observe(container);
 
+    // Intersection Observer to pause animation
+    const intersectionObserver = new IntersectionObserver(
+      ([entry]) => {
+        inViewRef.current = entry.isIntersecting;
+      },
+      { threshold: 0 }
+    );
+    intersectionObserver.observe(container);
+
     // Start animation
     animationRef.current = requestAnimationFrame(drawElectricBorder);
 
@@ -271,6 +286,7 @@ const ElectricBorder = ({
         cancelAnimationFrame(animationRef.current);
       }
       resizeObserver.disconnect();
+      intersectionObserver.disconnect();
     };
   }, [color, speed, chaos, borderRadius, octavedNoise, getRoundedRectPoint]);
 

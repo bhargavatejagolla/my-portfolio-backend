@@ -13,7 +13,7 @@ const getAttr = (distance, maxDist, minVal, maxVal) => {
 
 const debounce = (func, delay) => {
   let timeoutId;
-  return (...args) => {
+  return function(...args) {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => {
       func.apply(this, args);
@@ -82,6 +82,20 @@ const TextPressure = ({
     };
   }, []);
 
+  const [inView, setInView] = useState(true);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setInView(entry.isIntersecting);
+      },
+      { threshold: 0 }
+    );
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   const setSize = useCallback(() => {
     if (!containerRef.current || !titleRef.current) return;
 
@@ -114,6 +128,8 @@ const TextPressure = ({
   }, [setSize]);
 
   useEffect(() => {
+    if (!inView) return;
+
     let rafId;
     const animate = () => {
       mouseRef.current.x += (cursorRef.current.x - mouseRef.current.x) / 15;
@@ -155,7 +171,7 @@ const TextPressure = ({
 
     animate();
     return () => cancelAnimationFrame(rafId);
-  }, [width, weight, italic, alpha]);
+  }, [width, weight, italic, alpha, inView]);
 
   const styleElement = useMemo(() => {
     return (

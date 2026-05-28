@@ -19,6 +19,7 @@ const FallingText = ({
   const canvasContainerRef = useRef(null);
 
   const [effectStarted, setEffectStarted] = useState(false);
+  const inViewRef = useRef(true);
 
   useEffect(() => {
     if (!textRef.current) return;
@@ -33,23 +34,35 @@ const FallingText = ({
   }, [text, highlightWords, highlightClass]);
 
   useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        inViewRef.current = entry.isIntersecting;
+      },
+      { threshold: 0 }
+    );
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
     if (trigger === 'auto') {
       setEffectStarted(true);
-      return;
-    }
-    if (trigger === 'scroll' && containerRef.current) {
-      const observer = new IntersectionObserver(
+    } else if (trigger === 'scroll' && containerRef.current) {
+      const scrollObserver = new IntersectionObserver(
         ([entry]) => {
           if (entry.isIntersecting) {
             setEffectStarted(true);
-            observer.disconnect();
+            scrollObserver.disconnect();
           }
         },
         { threshold: 0.1 }
       );
-      observer.observe(containerRef.current);
-      return () => observer.disconnect();
+      scrollObserver.observe(containerRef.current);
+      return () => {
+        observer.disconnect();
+        scrollObserver.disconnect();
+      };
     }
+    return () => observer.disconnect();
   }, [trigger]);
 
   useEffect(() => {
@@ -133,19 +146,23 @@ const FallingText = ({
     Runner.run(runner, engine);
     Render.run(render);
 
+    let animationFrameId;
     const updateLoop = () => {
-      wordBodies.forEach(({ body, elem }) => {
-        const { x, y } = body.position;
-        elem.style.left = `${x}px`;
-        elem.style.top = `${y}px`;
-        elem.style.transform = `translate(-50%, -50%) rotate(${body.angle}rad)`;
-      });
-      Matter.Engine.update(engine);
-      requestAnimationFrame(updateLoop);
+      if (inViewRef.current) {
+        wordBodies.forEach(({ body, elem }) => {
+          const { x, y } = body.position;
+          elem.style.left = `${x}px`;
+          elem.style.top = `${y}px`;
+          elem.style.transform = `translate(-50%, -50%) rotate(${body.angle}rad)`;
+        });
+        Matter.Engine.update(engine);
+      }
+      animationFrameId = requestAnimationFrame(updateLoop);
     };
     updateLoop();
 
     return () => {
+      cancelAnimationFrame(animationFrameId);
       Render.stop(render);
       Runner.stop(runner);
       if (render.canvas && canvasContainerRef.current) {
