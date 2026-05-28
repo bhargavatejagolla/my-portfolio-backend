@@ -8,21 +8,44 @@ import FallingText from './FallingText';
 export default function Contact() {
   const formRef = useRef(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Simulate sending
     const btn = e.target.querySelector('button');
     const originalText = btn.innerHTML;
     btn.innerHTML = '<span class="animate-pulse">Sending...</span>';
-    setTimeout(() => {
-      btn.innerHTML = 'Sent Successfully!';
-      btn.classList.add('bg-green-500', 'text-white', 'border-green-500');
-      e.target.reset();
+    
+    const formData = new FormData(e.target);
+    // TODO: Paste your Web3Forms Access Key below
+    formData.append("access_key", "YOUR_ACCESS_KEY_HERE");
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        btn.innerHTML = 'Sent Successfully!';
+        btn.classList.add('bg-green-500', 'text-white', 'border-green-500');
+        e.target.reset();
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.classList.remove('bg-green-500', 'text-white', 'border-green-500');
+        }, 3000);
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      console.error(error);
+      btn.innerHTML = 'Error! Try Again.';
+      btn.classList.add('bg-red-500', 'text-white', 'border-red-500');
       setTimeout(() => {
         btn.innerHTML = originalText;
-        btn.classList.remove('bg-green-500', 'text-white', 'border-green-500');
+        btn.classList.remove('bg-red-500', 'text-white', 'border-red-500');
       }, 3000);
-    }, 1500);
+    }
   };
 
   return (
@@ -122,7 +145,8 @@ export default function Contact() {
               <div>
                 <label className="block text-sm font-mono text-gray-400 mb-2">Your Name</label>
                 <input 
-                  type="text" 
+                  type="text"
+                  name="name"
                   required
                   className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary transition-colors text-white"
                   placeholder="John Doe"
@@ -131,7 +155,8 @@ export default function Contact() {
               <div>
                 <label className="block text-sm font-mono text-gray-400 mb-2">Your Email</label>
                 <input 
-                  type="email" 
+                  type="email"
+                  name="email"
                   required
                   className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary transition-colors text-white"
                   placeholder="john@example.com"
@@ -140,6 +165,7 @@ export default function Contact() {
               <div className="flex-1">
                 <label className="block text-sm font-mono text-gray-400 mb-2">Message</label>
                 <textarea 
+                  name="message"
                   required
                   rows="5"
                   className="w-full h-[calc(100%-2rem)] min-h-[150px] bg-black/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary transition-colors text-white resize-none"
