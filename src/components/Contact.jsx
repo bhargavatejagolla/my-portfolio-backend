@@ -15,13 +15,18 @@ export default function Contact() {
     btn.innerHTML = '<span class="animate-pulse">Sending...</span>';
     
     const formData = new FormData(e.target);
-    // Web3Forms Access Key
-    formData.append("access_key", "511786e3-f754-460f-8ac6-dae1a4d9d762");
+    const object = Object.fromEntries(formData);
+    object.access_key = "511786e3-f754-460f-8ac6-dae1a4d9d762";
+    const json = JSON.stringify(object);
 
     try {
       const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        body: formData
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: json
       });
       
       const data = await response.json();
