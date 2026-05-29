@@ -17,7 +17,7 @@ function App() {
       <Navbar />
       <Hero />
 
-      <div className="relative z-10 bg-background/95 backdrop-blur-3xl border-t border-white/5 shadow-[0_-20px_50px_rgba(0,0,0,0.5)]">
+      <div className="relative z-10 bg-background/98 border-t border-white/5 shadow-[0_-20px_50px_rgba(0,0,0,0.8)]">
         <About />
         <Skills />
         <Projects />
