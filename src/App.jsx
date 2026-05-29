@@ -5,6 +5,7 @@ import Hero from './components/Hero';
 import About from './components/About';
 import Skills from './components/Skills';
 import Projects from './components/Projects';
+import Experience from './components/Experience';
 import Certificates from './components/Certificates';
 import Education from './components/Education';
 import Contact from './components/Contact';
@@ -12,13 +13,6 @@ import Contact from './components/Contact';
 function App() {
   return (
     <div className="min-h-screen text-white font-sans selection:bg-primary/30">
-      <LetterGlitch
-        glitchSpeed={50}
-        centerVignette={false}
-        outerVignette={false}
-        smooth={true}
-        className="fixed inset-0"
-      />
 
       <Navbar />
       <Hero />
@@ -27,6 +21,7 @@ function App() {
         <About />
         <Skills />
         <Projects />
+        <Experience />
         <Certificates />
         <Education />
         <Contact />
