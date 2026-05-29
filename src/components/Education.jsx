@@ -38,7 +38,7 @@ export default function Education() {
                 <p className="text-primary font-mono text-lg">2024 - 2028</p>
                 <div className="mt-6 text-sm text-gray-400 flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-                  Hover to decode
+                  Press to decode
                 </div>
               </div>
             }
@@ -83,7 +83,7 @@ export default function Education() {
                 <p className="text-secondary font-mono text-lg">2022 - 2024</p>
                 <div className="mt-6 text-sm text-gray-400 flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
-                  Hover to decode
+                  Press to decode
                 </div>
               </div>
             }
