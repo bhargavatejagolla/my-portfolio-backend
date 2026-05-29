@@ -29,7 +29,7 @@ const FallingText = ({
         const isHighlighted = highlightWords.some(hw => word.startsWith(hw));
         return `<span class="word ${isHighlighted ? highlightClass : ''}">${word}</span>`;
       })
-      .join(' ');
+      .join('');
     textRef.current.innerHTML = newHTML;
   }, [text, highlightWords, highlightClass]);
 
@@ -81,17 +81,6 @@ const FallingText = ({
     const engine = Engine.create();
     engine.world.gravity.y = gravity;
 
-    const render = Render.create({
-      element: canvasContainerRef.current,
-      engine,
-      options: {
-        width,
-        height,
-        background: backgroundColor,
-        wireframes
-      }
-    });
-
     const boundaryOptions = {
       isStatic: true,
       render: { fillStyle: 'transparent' }
@@ -138,13 +127,11 @@ const FallingText = ({
         render: { visible: false }
       }
     });
-    render.mouse = mouse;
 
     World.add(engine.world, [floor, leftWall, rightWall, ceiling, mouseConstraint, ...wordBodies.map(wb => wb.body)]);
 
     const runner = Runner.create();
     Runner.run(runner, engine);
-    Render.run(render);
 
     let animationFrameId;
     const updateLoop = () => {
@@ -155,7 +142,6 @@ const FallingText = ({
           elem.style.top = `${y}px`;
           elem.style.transform = `translate(-50%, -50%) rotate(${body.angle}rad)`;
         });
-        Matter.Engine.update(engine);
       }
       animationFrameId = requestAnimationFrame(updateLoop);
     };
@@ -163,12 +149,7 @@ const FallingText = ({
 
     return () => {
       cancelAnimationFrame(animationFrameId);
-      Render.stop(render);
       Runner.stop(runner);
-      if (render.canvas && canvasContainerRef.current) {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        canvasContainerRef.current.removeChild(render.canvas);
-      }
       World.clear(engine.world);
       Engine.clear(engine);
     };
