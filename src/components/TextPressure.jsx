@@ -23,12 +23,12 @@ const debounce = (func, delay) => {
 
 const TextPressure = ({
   text = 'Compressa',
-  fontFamily = 'Compressa VF',
-  fontUrl = 'https://res.cloudinary.com/dr6lvwubh/raw/upload/v1529908256/CompressaPRO-GX.woff2',
+  fontFamily = "'Roboto Flex', 'Outfit', 'Plus Jakarta Sans', sans-serif",
+  fontUrl = '',
 
   width = true,
   weight = true,
-  italic = true,
+  italic = false,
   alpha = false,
 
   flex = true,
@@ -52,7 +52,23 @@ const TextPressure = ({
   const [scaleY, setScaleY] = useState(1);
   const [lineHeight, setLineHeight] = useState(1);
 
-  const chars = text.split('');
+  // Group characters into words, tracking global index for spansRef
+  const wordsWithChars = useMemo(() => {
+    let charCount = 0;
+    return text.split(' ').map(word => {
+      const chars = word.split('');
+      const wordWithIndices = chars.map(char => {
+        const index = charCount;
+        charCount++;
+        return { char, index };
+      });
+      return { word, chars: wordWithIndices };
+    });
+  }, [text]);
+
+  const totalChars = useMemo(() => {
+    return wordsWithChars.reduce((sum, wordObj) => sum + wordObj.chars.length, 0);
+  }, [wordsWithChars]);
 
   useEffect(() => {
     const handleMouseMove = e => {
@@ -101,7 +117,8 @@ const TextPressure = ({
 
     const { width: containerW, height: containerH } = containerRef.current.getBoundingClientRect();
 
-    let newFontSize = containerW / (chars.length / 2);
+    // Adjust font size calculation to scale with the word lengths
+    let newFontSize = containerW / (totalChars / 1.5);
     newFontSize = Math.max(newFontSize, minFontSize);
 
     setFontSize(newFontSize);
@@ -118,7 +135,7 @@ const TextPressure = ({
         setLineHeight(yRatio);
       }
     });
-  }, [chars.length, minFontSize, scale]);
+  }, [totalChars, minFontSize, scale]);
 
   useEffect(() => {
     const debouncedSetSize = debounce(setSize, 100);
@@ -150,7 +167,8 @@ const TextPressure = ({
 
           const d = dist(mouseRef.current, charCenter);
 
-          const wdth = width ? Math.floor(getAttr(d, maxDist, 5, 200)) : 100;
+          // Roboto Flex axes: width (25..151) and weight (100..1000)
+          const wdth = width ? Math.floor(getAttr(d, maxDist, 25, 125)) : 100;
           const wght = weight ? Math.floor(getAttr(d, maxDist, 100, 900)) : 400;
           const italVal = italic ? getAttr(d, maxDist, 0, 1).toFixed(2) : 0;
           const alphaVal = alpha ? getAttr(d, maxDist, 0, 1).toFixed(2) : 1;
@@ -174,6 +192,7 @@ const TextPressure = ({
   }, [width, weight, italic, alpha, inView]);
 
   const styleElement = useMemo(() => {
+    if (!fontUrl) return null;
     return (
       <style>{`
         @font-face {
@@ -181,35 +200,9 @@ const TextPressure = ({
           src: url('${fontUrl}');
           font-style: normal;
         }
-
-        .flex-text-pressure {
-          display: flex;
-          justify-content: space-between;
-        }
-
-        .stroke-text-pressure span {
-          position: relative;
-          color: ${textColor};
-        }
-        .stroke-text-pressure span::after {
-          content: attr(data-char);
-          position: absolute;
-          left: 0;
-          top: 0;
-          color: transparent;
-          z-index: -1;
-          -webkit-text-stroke-width: 3px;
-          -webkit-text-stroke-color: ${strokeColor};
-        }
-
-        .text-pressure-title {
-          color: ${textColor};
-        }
       `}</style>
     );
-  }, [fontFamily, fontUrl, textColor, strokeColor]);
-
-  const dynamicClassName = [className, flex ? 'flex-text-pressure' : '', stroke ? 'stroke-text-pressure' : ''].filter(Boolean).join(' ');
+  }, [fontFamily, fontUrl]);
 
   return (
     <div
@@ -218,13 +211,16 @@ const TextPressure = ({
         position: 'relative',
         width: '100%',
         height: '100%',
-        background: 'transparent'
+        background: 'transparent',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
       }}
     >
       {styleElement}
       <h1
         ref={titleRef}
-        className={`text-pressure-title ${dynamicClassName}`}
+        className={`text-pressure-title ${className}`}
         style={{
           fontFamily,
           textTransform: 'uppercase',
@@ -233,24 +229,46 @@ const TextPressure = ({
           transform: `scale(1, ${scaleY})`,
           transformOrigin: 'center top',
           margin: 0,
-          textAlign: 'center',
           userSelect: 'none',
           whiteSpace: 'nowrap',
           fontWeight: 100,
-          width: '100%'
+          width: '100%',
+          display: 'flex',
+          justifyContent: flex ? 'space-between' : 'center',
+          alignItems: 'center',
+          gap: flex ? '0' : '0.4em'
         }}
       >
-        {chars.map((char, i) => (
+        {wordsWithChars.map((wordObj, wordIdx) => (
           <span
-            key={i}
-            ref={el => (spansRef.current[i] = el)}
-            data-char={char}
+            key={wordIdx}
+            className="text-pressure-word"
             style={{
-              display: 'inline-block',
-              color: stroke ? undefined : textColor
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.02em'
             }}
           >
-            {char}
+            {wordObj.chars.map(({ char, index }) => (
+              <span
+                key={index}
+                ref={el => (spansRef.current[index] = el)}
+                data-char={char}
+                style={{
+                  display: 'inline-block',
+                  color: stroke ? 'transparent' : textColor,
+                  WebkitTextStrokeWidth: stroke ? '2px' : '0',
+                  WebkitTextStrokeColor: stroke ? strokeColor : 'transparent',
+                  transition: 'color 0.2s ease, -webkit-text-stroke 0.2s ease'
+                }}
+              >
+                {char}
+              </span>
+            ))}
+            {/* Render space character spacer if not the last word */}
+            {wordIdx < wordsWithChars.length - 1 && (
+              <span style={{ width: '0.35em', display: 'inline-block' }}>&nbsp;</span>
+            )}
           </span>
         ))}
       </h1>

@@ -69,7 +69,7 @@ export default function Experience() {
   return (
     <section id="experience" className="py-24 px-6 max-w-5xl mx-auto border-t border-white/5 relative z-10">
       <div className="text-center mb-24">
-        <h2 className="text-4xl font-black mb-4">Experience & <span className="text-primary">Achievements</span></h2>
+        <h2 className="section-title text-4xl mb-4">Experience & <span className="text-primary">Achievements</span></h2>
         <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full"></div>
       </div>
 

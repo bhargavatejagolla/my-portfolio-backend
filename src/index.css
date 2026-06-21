@@ -10,9 +10,19 @@
 body {
   background-color: var(--color-background);
   color: white;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
 }
 
 .glass-panel {

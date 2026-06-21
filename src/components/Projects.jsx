@@ -82,7 +82,7 @@ export default function Projects() {
   return (
     <section id="projects" className="py-24 px-6 max-w-6xl mx-auto border-t border-white/5">
       <div className="text-center mb-16">
-        <h2 className="text-4xl font-black mb-4">Featured <span className="text-primary">Projects</span></h2>
+        <h2 className="section-title text-4xl mb-4">Featured <span className="text-primary">Projects</span></h2>
         <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full"></div>
       </div>
       
