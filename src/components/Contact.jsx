@@ -60,7 +60,7 @@ export default function Contact() {
         <div style={{ position: 'relative', height: '100px', width: '100%', maxWidth: '600px', margin: '0 auto' }}>
           <TextPressure
             text="GET IN TOUCH"
-            flex={true}
+            flex={false}
             alpha={false}
             stroke={false}
             width={true}

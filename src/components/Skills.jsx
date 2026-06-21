@@ -50,7 +50,7 @@ export default function Skills() {
         <div style={{ position: 'relative', height: '100px', width: '100%', maxWidth: '700px', margin: '0 auto' }}>
           <TextPressure
             text="TECHNICAL SKILLS"
-            flex={true}
+            flex={false}
             alpha={false}
             stroke={false}
             width={true}

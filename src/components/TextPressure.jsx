@@ -31,7 +31,7 @@ const TextPressure = ({
   italic = false,
   alpha = false,
 
-  flex = true,
+  flex = false,
   stroke = false,
   scale = false,
 
@@ -168,8 +168,10 @@ const TextPressure = ({
           const d = dist(mouseRef.current, charCenter);
 
           // Roboto Flex axes: width (25..151) and weight (100..1000)
-          const wdth = width ? Math.floor(getAttr(d, maxDist, 25, 125)) : 100;
-          const wght = weight ? Math.floor(getAttr(d, maxDist, 100, 900)) : 400;
+          // Width range: 75 (idle) to 150 (hovered)
+          // Weight range: 300 (idle) to 1000 (hovered)
+          const wdth = width ? Math.floor(getAttr(d, maxDist, 75, 75)) : 100;
+          const wght = weight ? Math.floor(getAttr(d, maxDist, 300, 700)) : 400;
           const italVal = italic ? getAttr(d, maxDist, 0, 1).toFixed(2) : 0;
           const alphaVal = alpha ? getAttr(d, maxDist, 0, 1).toFixed(2) : 1;
 

@@ -10,7 +10,7 @@ export default function About() {
         <div style={{ position: 'relative', height: '100px', width: '100%', maxWidth: '600px', margin: '0 auto' }}>
           <TextPressure
             text="ABOUT ME"
-            flex={true}
+            flex={false}
             alpha={false}
             stroke={false}
             width={true}
